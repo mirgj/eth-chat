@@ -9,7 +9,7 @@ contract ChatRoom {
   }
   string public roomName;
   address public roomCreator;
-  User[] users;
+  User[] public users;
 
   constructor(string name, address creator, string creatorNickname) public { 
     roomName = name;
