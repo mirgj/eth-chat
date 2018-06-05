@@ -1,4 +1,5 @@
 pragma solidity ^0.4.23;
+import "./ChatMessage.sol";
 
 contract ChatRoom {
 
@@ -7,19 +8,23 @@ contract ChatRoom {
     string name;
     uint time;
   }
+  mapping(address => User) userInfo;
+  address[] public users;
   string public roomName;
   address public roomCreator;
-  User[] public users;
+  ChatMessage[] public messages;
 
-  constructor(string name, address creator, string creatorNickname) public { 
+  constructor(address creator, string name, string creatorNickname) public { 
     roomName = name;
     roomCreator = creator;
 
-    users.push(User(creator, creatorNickname, now));
+    users.push(creator);
+    userInfo[creator] = User(creator, creatorNickname, now);
   }
 
-  function addUser(address user, string nickname) public {
-    users.push(User(user, nickname, now));
+  function addUser(string nickname) public {
+    userInfo[msg.sender] = User(msg.sender, nickname, now);
+    users.push(msg.sender);
   }
 
   function getUserCount() public view returns(uint) {
@@ -27,9 +32,26 @@ contract ChatRoom {
   }
 
   function getUserAt(uint index) public view returns(address, string, uint) {
-    require(index < users.length - 1);
+    require(index < users.length);
+    address userAddr = users[index];
 
-    return (users[index].id, users[index].name, users[index].time);
+    return (userInfo[userAddr].id, userInfo[userAddr].name, userInfo[userAddr].time);
+  }
+
+  function getMessageCount() public view returns(uint) {
+    return messages.length;
+  }
+
+  function addMessage(string message) public {
+    ChatMessage messageContract = new ChatMessage(msg.sender, message);
+
+    messages.push(messageContract);
+  }
+
+  function getMessageAt(uint index) public view returns(address, string) {
+    require(index < messages.length);
+
+    return (messages[index].owner(), messages[index].message());
   }
 
 }
