@@ -9,10 +9,10 @@ contract ChatRoom {
     uint time;
   }
   mapping(address => User) userInfo;
-  address[] public users;
+  address[] users;
   string public roomName;
   address public roomCreator;
-  ChatMessage[] public messages;
+  ChatMessage[] messages;
 
   constructor(address creator, string name, string creatorNickname) public { 
     roomName = name;
