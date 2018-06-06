@@ -1,5 +1,4 @@
 pragma solidity ^0.4.23;
-import "./ChatMessage.sol";
 
 contract ChatRoom {
 
@@ -8,11 +7,16 @@ contract ChatRoom {
     string name;
     uint time;
   }
+  struct Message {
+    address owner;
+    string message;
+  }
+
   mapping(address => User) userInfo;
   address[] users;
   string public roomName;
   address public roomCreator;
-  ChatMessage[] messages;
+  Message[] messages;
 
   constructor(address creator, string name, string creatorNickname) public { 
     roomName = name;
@@ -43,15 +47,13 @@ contract ChatRoom {
   }
 
   function addMessage(string message) public {
-    ChatMessage messageContract = new ChatMessage(msg.sender, message);
-
-    messages.push(messageContract);
+    messages.push(Message(msg.sender, message));
   }
 
   function getMessageAt(uint index) public view returns(address, string) {
     require(index < messages.length);
 
-    return (messages[index].owner(), messages[index].message());
+    return (messages[index].owner, messages[index].message);
   }
 
 }
