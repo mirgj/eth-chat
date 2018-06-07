@@ -10,25 +10,29 @@ contract ChatRoom {
   struct Message {
     address owner;
     string message;
+    uint time;
   }
 
   mapping(address => User) userInfo;
   address[] users;
-  string public roomName;
-  address public roomCreator;
   Message[] messages;
 
-  constructor(address creator, string name, string creatorNickname) public { 
-    roomName = name;
-    roomCreator = creator;
+  string public name;
+  address public owner;
 
-    users.push(creator);
-    userInfo[creator] = User(creator, creatorNickname, now);
+  event UserAdded(address userAddress, string nickName);
+  event MessageAdded(address userAddress, string message);
+
+  constructor(address _owner, string _name) public { 
+    name = _name;
+    owner = _owner;
   }
 
   function addUser(string nickname) public {
     userInfo[msg.sender] = User(msg.sender, nickname, now);
     users.push(msg.sender);
+
+    emit UserAdded(msg.sender, nickname);
   }
 
   function getUserCount() public view returns(uint) {
@@ -47,7 +51,9 @@ contract ChatRoom {
   }
 
   function addMessage(string message) public {
-    messages.push(Message(msg.sender, message));
+    messages.push(Message(msg.sender, message, now));
+
+    emit MessageAdded(msg.sender, message);
   }
 
   function getMessageAt(uint index) public view returns(address, string) {
