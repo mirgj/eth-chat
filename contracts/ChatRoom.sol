@@ -40,7 +40,7 @@ contract ChatRoom {
   }
 
   function isInRoom() public view returns(bool) {
-    return users[msg.sender].id != address(0x0);
+    return userInfo[msg.sender].id != address(0x0);
   }
 
   function getUserAt(uint index) public view returns(address, string, uint) {
@@ -55,6 +55,8 @@ contract ChatRoom {
   }
 
   function addMessage(string message) public {
+    require(userInfo[msg.sender].id != address(0x0));
+
     messages.push(Message(msg.sender, message, now));
 
     emit MessageAdded(msg.sender, message);
