@@ -6,7 +6,7 @@ contract ChatManager {
   mapping(bytes32 => ChatRoom) chatRooms;
   string[] public roomNames;
 
-  event RoomCreated(bytes32 roomId, string roomName);
+  event RoomCreated(address roomAddress, bytes32 roomId, string roomName);
 
   constructor() public { }
 
@@ -19,7 +19,7 @@ contract ChatManager {
     chatRooms[id] = room;
     roomNames.push(roomName);
 
-    emit RoomCreated(id, roomName);
+    emit RoomCreated(address(room), id, roomName);
   }
 
   function getRoomCount() public view returns(uint) {

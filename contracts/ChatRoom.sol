@@ -39,6 +39,10 @@ contract ChatRoom {
     return users.length;
   }
 
+  function isInRoom() public view returns(bool) {
+    return users[msg.sender].id != address(0x0);
+  }
+
   function getUserAt(uint index) public view returns(address, string, uint) {
     require(index < users.length);
     address userAddr = users[index];
